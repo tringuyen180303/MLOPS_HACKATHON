@@ -1,0 +1,43 @@
+global:
+  scrape_interval: 1m
+
+# Rules for alerting for specific files
+
+alerting:
+  alertmanagers:
+    - static_configs:
+      - targets:
+        - alertmanager: 9093
+rules_files:
+  - rules.yaml
+
+scrape_configs:
+  - job_name: 'localhost'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['localhost:8000']
+      # fix by the port for 5040
+  
+  - job_name: "prometheus"
+    scrape_interval: 1m
+    static_configs:
+    - targets:
+      - "host.docker.internal:9090"
+  
+  - job_name: "node"
+    static_configs:
+    - targets:
+      - "host.docker.internal:9100"
+  
+  - job_name: "online_serving"
+    scrape_interval: 5s
+    static_configs:
+    - targets:
+      - "host.docker.internal:8172"
+  
+  - job_name: "monitoring_service"
+    scrape_interval: 5s
+    static_configs:
+    - targets: 
+      - "host.docker.internal:8309"
+      
